@@ -17,14 +17,18 @@ tags:
 
 paths:
   /health-check:
-    get:
-      summary: Health Check Services (Postgres, Redis, Minio)
-      description: This API will check all services are alive
-      tags: [Health-Check]
-      responses:
-        '200':
-          $ref: '#/components/schemas/HealthCheckResponse'
-
+  get:
+    summary: Health Check Services (Postgres, Redis, Minio)
+    description: This API will check all services are alive
+    tags: [Health-Check]
+    responses:
+      '200':
+        description: OK
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthCheckResponse'
+              
   /token:
     post:
       summary: Create a new JWT token
