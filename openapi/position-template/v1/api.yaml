@@ -17,7 +17,7 @@ tags:
 
 paths:
   /health-check:
-  get:
+    get:
     summary: Health Check Services (Postgres, Redis, Minio)
     description: This API will check all services are alive
     tags: [Health-Check]
