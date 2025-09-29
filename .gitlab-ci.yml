@@ -1,0 +1,21 @@
+# .gitlab-ci.yml
+image: node:18-alpine
+
+stages: [deploy]
+
+pages:
+  stage: deploy
+  script:
+    # Build Redoc HTML(s)
+    - npx @redocly/cli build-docs openapi/position-template/v1/api.yaml -o public/position-template.html
+    # (optional) publish the raw YAML too
+    - mkdir -p public/openapi/position-template/v1
+    - cp openapi/position-template/v1/api.yaml public/openapi/position-template/v1/
+    # Simple landing page (add more links as you add specs)
+    - echo "<h1>Sustaina API Docs</h1><ul><li><a href='position-template.html'>Position Template</a></li></ul>" > public/index.html
+  artifacts:
+    paths:
+      - public
+  rules:
+    # run on the default branch (master in your case)
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

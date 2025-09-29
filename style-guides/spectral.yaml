@@ -1,0 +1,33 @@
+extends: ["spectral:oas"]
+rules:
+  operation-operationId:
+    description: OperationId is required
+    severity: error
+    given: $.paths.*[*]
+    then:
+      field: operationId
+      function: truthy
+
+  operation-tags:
+    description: At least one tag per operation
+    severity: warn
+    given: $.paths.*[*].tags
+    then:
+      function: length
+      functionOptions: { min: 1 }
+
+  require-error-schema:
+    description: For 4xx responses, JSON schema must reference shared Error schema
+    severity: error
+    given: $.paths.*[*].responses[?(@property >= '400' && @property < '500')].content.application/json.schema.$ref
+    then:
+      function: truthy
+
+  paths-kebab-case:
+    description: Path segments must use kebab-case
+    severity: warn
+    given: $.paths[*]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(/[a-z0-9]+(-[a-z0-9]+)*)*(/\\{[a-zA-Z0-9]+\\})?$"
