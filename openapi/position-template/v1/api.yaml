@@ -882,6 +882,115 @@
             "description": "Internal server error"
           }
         }
+      },
+      "put": {
+        "summary": "Edit Position by ID",
+        "description": "Update an existing position. Supports changing the position type and all associated fields when the caller confirms any disruptive changes.",
+        "tags": [
+          "Position"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "updatePositionById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "forceTypeChange",
+            "in": "query",
+            "required": false,
+            "description": "Set to true after the user confirms a type change that might reset downstream data. When omitted or false, the API may reject type changes for positions already in use.",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePositionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Position updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PositionControllerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Position not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g., type change forbidden without confirmation or name duplicate)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
       }
     },
     "/api/v1/position-templates/parent-picker/roots": {
@@ -4429,6 +4538,14 @@
           "questionnaireAssignmentCount"
         ],
         "additionalProperties": false
+      },
+      "UpdatePositionRequest": {
+        "description": "Payload for editing a position. Mirrors the create payload but is used when updating an existing position.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreatePositionRequest"
+          }
+        ]
       }
     },
     "responses": {
