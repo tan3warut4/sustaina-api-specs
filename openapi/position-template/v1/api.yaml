@@ -768,7 +768,7 @@
       },
       "delete": {
         "summary": "Delete Position by ID",
-        "description": "Delete the specified position. Use `cascade=SUBTREE` to delete the entire subtree.\nUse `dryRun=true` to preview affected count (and IDs if requested) without applying.",
+        "description": "Delete the specified position. Use `cascade=SUBTREE` to delete the entire subtree.\nUse `dryRun=true` to preview affected count (and IDs if requested) without applying. Associated file attachments are permanently removed as part of this operation.",
         "tags": [
           "Position"
         ],
@@ -885,7 +885,7 @@
       },
       "put": {
         "summary": "Edit Position by ID",
-        "description": "Update an existing position. Supports changing the position type and all associated fields when the caller confirms any disruptive changes.",
+        "description": "Update an existing position. Supports changing the position type and all associated fields when the caller confirms any disruptive changes. Editing performs a soft delete of the previous revision so existing attachments remain unless replaced.",
         "tags": [
           "Position"
         ],
@@ -4475,6 +4475,11 @@
           },
           "affected": {
             "$ref": "#/components/schemas/ToggleAffected"
+          },
+          "filesDeleted": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of file attachments permanently removed with this position."
           }
         },
         "required": [
@@ -4482,7 +4487,8 @@
           "cascade",
           "dryRun",
           "deleted",
-          "affected"
+          "affected",
+          "filesDeleted"
         ]
       },
       "DeletePositionSuccessEnvelope": {
