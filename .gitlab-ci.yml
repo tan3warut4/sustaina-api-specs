@@ -1,16 +1,21 @@
 # .gitlab-ci.yml
+image: node:18-alpine
+
+stages: [deploy]
+
 pages:
-  image: alpine:latest
   stage: deploy
   script:
-    - mkdir -p public
-    # (Re)build Redoc page on CI. Remove if you ship a hand-written index.html/Swagger-UI.
-    - apk add --no-cache nodejs npm
-    - npx @redocly/cli build-docs openapi/position-template/v1/api.yaml --output public/position-template.html
-    - cp -r openapi public/  # serve raw YAMLs too
-    - echo "<h1>Sustaina API Docs</h1><a href='position-template.html'>Position Template</a>" > public/index.html
+    # Build Redoc HTML(s)
+    - npx @redocly/cli build-docs openapi/position-template/v1/api.yaml -o public/position-template.html
+    # (optional) publish the raw YAML too
+    - mkdir -p public/openapi/position-template/v1
+    - cp openapi/position-template/v1/api.yaml public/openapi/position-template/v1/
+    # Simple landing page (add more links as you add specs)
+    - echo "<h1>Sustaina API Docs</h1><ul><li><a href='position-template.html'>Position Template</a></li></ul>" > public/index.html
   artifacts:
     paths:
       - public
   rules:
+    # run on the default branch (master in your case)
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
