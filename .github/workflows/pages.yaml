@@ -1,0 +1,70 @@
+name: Deploy API docs to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Build Redoc HTML
+        run: |
+          mkdir -p public
+          npx @redocly/cli build-docs openapi/position-template/v1/api.yaml --output public/position-template.html
+          cp -r openapi public/
+          cat > public/index.html <<'HTML'
+          <!doctype html>
+          <html>
+            <head>
+              <meta charset="utf-8"/>
+              <meta name="viewport" content="width=device-width, initial-scale=1"/>
+              <title>Sustaina API Docs</title>
+              <style>
+                body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;padding:24px;line-height:1.5}
+                a{display:block;margin:8px 0}
+              </style>
+            </head>
+            <body>
+              <h1>Sustaina API Docs</h1>
+              <a href="position-template.html">Position Template (Redoc)</a>
+              <hr/>
+              <p>Raw OpenAPI files:</p>
+              <a href="openapi/position-template/v1/api.yaml">openapi/position-template/v1/api.yaml</a>
+            </body>
+          </html>
+          HTML
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
