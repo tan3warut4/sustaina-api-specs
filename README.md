@@ -1,4 +1,4 @@
-# api-specs
+# sustaina-api-specs
 
 
 
@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.leapsolutions.co.th/sustaina/api-specs/api-specs.git
-git branch -M master
-git push -uf origin master
+git remote add origin https://gitlab.com/tan3warut4/sustaina-api-specs.git
+git branch -M main
+git push -uf origin main
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab.leapsolutions.co.th/sustaina/api-specs/api-specs/-/settings/integrations)
+- [ ] [Set up project integrations](https://gitlab.com/tan3warut4/sustaina-api-specs/-/settings/integrations)
 
 ## Collaborate with your team
 
