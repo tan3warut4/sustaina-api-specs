@@ -3636,7 +3636,8 @@
             "nullable": true
           },
           "code": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "displayId": {
             "type": "string"
@@ -3669,7 +3670,8 @@
             }
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "files": {
             "type": "array",
@@ -3684,7 +3686,8 @@
           "title": {
             "anyOf": [
               {
-                "$ref": "#/components/schemas/TitlePayload"
+                "$ref": "#/components/schemas/TitlePayload",
+                "nullable": true
               }
             ]
           },
@@ -3746,6 +3749,17 @@
           },
           "hasChildren": {
             "type": "boolean"
+          },
+          "indicator": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/IndicatorPayload",
+                "nullable": true
+              }
+            ]
+          },
+          "usage": {
+            "$ref": "#/components/schemas/PositionUsageStatus"
           }
         },
         "required": [
@@ -4377,6 +4391,44 @@
           "data",
           "message"
         ]
+      },
+      "PositionUsageStatus": {
+        "type": "object",
+        "description": "Summarizes whether the position is already assigned for downstream usage, so the UI can enforce edit rules.",
+        "properties": {
+          "assignedToUse": {
+            "type": "boolean",
+            "description": "True when the position is referenced by at least one dependent entity."
+          },
+          "indicatorFormulaCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of indicator formulas referencing this position."
+          },
+          "userAssignmentCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of users directly linked to this position."
+          },
+          "siteAssignmentCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of sites that use this position."
+          },
+          "questionnaireAssignmentCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of questionnaires that reference this position."
+          }
+        },
+        "required": [
+          "assignedToUse",
+          "indicatorFormulaCount",
+          "userAssignmentCount",
+          "siteAssignmentCount",
+          "questionnaireAssignmentCount"
+        ],
+        "additionalProperties": false
       }
     },
     "responses": {
