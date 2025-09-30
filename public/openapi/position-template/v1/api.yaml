@@ -881,6 +881,30 @@
                       "$ref": "#/components/schemas/ParentPositionLinkedResponse"
                     }
                   ]
+                },
+                "examples": {
+                  "parentPositionLinked": {
+                    "summary": "Parent Position Linked",
+                    "value": {
+                      "error": "PARENT_POSITION_LINKED",
+                      "message": "Cannot delete this position because it still has child positions. Remove or reassign child positions first.",
+                      "childCount": 2
+                    }
+                  },
+                  "dataLinkedToSystemData": {
+                    "summary": "Data Linked to System Data",
+                    "value": {
+                      "error": "POSITION_LINKED_TO_SYSTEM_DATA",
+                      "message": "Cannot delete data because the position is linked to system data (site, product group, questionnaire, report, or workflow).",
+                      "usage": {
+                        "isUse": true,
+                        "indicatorFormulaCount": 1,
+                        "userAssignmentCount": 0,
+                        "siteAssignmentCount": 3,
+                        "questionnaireAssignmentCount": 1
+                      }
+                    }
+                  }
                 }
               }
             }
