@@ -516,7 +516,7 @@
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationErrorResponse"
                 }
@@ -526,7 +526,7 @@
           "409": {
             "description": "Conflict error (e.g., duplicate code or invalid parent)",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ConflictResponse"
                 }
@@ -575,7 +575,7 @@
           "404": {
             "description": "Position not found",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
                 }
@@ -705,7 +705,7 @@
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationErrorResponse"
                 }
@@ -754,7 +754,7 @@
           "404": {
             "description": "Position not found",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
                 }
@@ -831,7 +831,7 @@
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestResponse"
                 }
@@ -841,7 +841,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
@@ -851,7 +851,7 @@
           "403": {
             "description": "Forbidden",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ForbiddenResponse"
                 }
@@ -861,7 +861,7 @@
           "404": {
             "description": "Position not found",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
                 }
@@ -871,7 +871,7 @@
           "409": {
             "description": "Conflict – deletion is blocked because the position is in use or has child positions.",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "oneOf": [
                     {
@@ -886,16 +886,22 @@
                   "parentPositionLinked": {
                     "summary": "Parent Position Linked",
                     "value": {
+                      "type": "https://docs.sustaina.io/problems/parent-position-linked",
+                      "title": "Parent Position Linked",
+                      "status": 409,
+                      "detail": "Cannot delete this position because it still has child positions. Remove or reassign child positions first.",
                       "error": "PARENT_POSITION_LINKED",
-                      "message": "Cannot delete this position because it still has child positions. Remove or reassign child positions first.",
                       "childCount": 2
                     }
                   },
                   "dataLinkedToSystemData": {
                     "summary": "Data Linked to System Data",
                     "value": {
+                      "type": "https://docs.sustaina.io/problems/position-linked",
+                      "title": "Data Linked to System Data",
+                      "status": 409,
+                      "detail": "Cannot delete data because the position is linked to system data (site, product group, questionnaire, report, or workflow).",
                       "error": "POSITION_LINKED_TO_SYSTEM_DATA",
-                      "message": "Cannot delete data because the position is linked to system data (site, product group, questionnaire, report, or workflow).",
                       "usage": {
                         "isUse": true,
                         "indicatorFormulaCount": 1,
@@ -971,7 +977,7 @@
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestResponse"
                 }
@@ -981,7 +987,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
@@ -991,7 +997,7 @@
           "403": {
             "description": "Forbidden",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ForbiddenResponse"
                 }
@@ -1001,7 +1007,7 @@
           "404": {
             "description": "Position not found",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
                 }
@@ -1011,7 +1017,7 @@
           "409": {
             "description": "Conflict (e.g., type change forbidden without confirmation or name duplicate)",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ConflictResponse"
                 }
@@ -1293,7 +1299,7 @@
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ValidationErrorResponse"
                 }
@@ -1303,7 +1309,7 @@
           "404": {
             "description": "Parent not found",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotFoundResponse"
                 }
@@ -2177,7 +2183,7 @@
           "400": {
             "description": "Validation error",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/BadRequestResponse"
                 }
@@ -2187,7 +2193,7 @@
           "401": {
             "description": "Unauthorized",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/UnauthorizedResponse"
                 }
@@ -2197,7 +2203,7 @@
           "403": {
             "description": "Forbidden",
             "content": {
-              "application/json": {
+              "application/problem+json": {
                 "schema": {
                   "$ref": "#/components/schemas/ForbiddenResponse"
                 }
@@ -3274,61 +3280,107 @@
         "additionalProperties": false
       },
       "ValidationErrorResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "Validation Error"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
           },
-          "details": {
-            "type": "object"
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "Validation Error"
+              },
+              "details": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "error",
+              "details"
+            ],
+            "additionalProperties": true
           }
-        },
-        "required": [
-          "error",
-          "details"
-        ]
+        ],
+        "example": {
+          "type": "https://docs.sustaina.io/problems/validation-error",
+          "title": "Validation Error",
+          "status": 400,
+          "detail": "One or more fields are invalid.",
+          "error": "VALIDATION_ERROR",
+          "details": {
+            "name": [
+              "Name is required"
+            ]
+          }
+        }
       },
       "ConflictResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "POSITION_NAME_CONFLICT"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
           },
-          "message": {
-            "type": "string"
-          },
-          "localeConflict": {
-            "type": "string",
-            "example": "en"
-          },
-          "statusCode": {
-            "type": "integer",
-            "example": 409
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "POSITION_NAME_CONFLICT"
+              },
+              "message": {
+                "type": "string"
+              },
+              "localeConflict": {
+                "type": "string",
+                "example": "en"
+              }
+            },
+            "required": [
+              "error",
+              "message"
+            ],
+            "additionalProperties": true
           }
-        },
-        "required": [
-          "error",
-          "message",
-          "statusCode"
-        ]
+        ],
+        "example": {
+          "type": "https://docs.sustaina.io/problems/conflict",
+          "title": "Conflict",
+          "status": 409,
+          "detail": "The position name already exists.",
+          "error": "POSITION_NAME_CONFLICT",
+          "localeConflict": "en"
+        }
       },
       "NotFoundResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "Position Not Found"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
           },
-          "message": {
-            "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "Position Not Found"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "error",
+              "message"
+            ],
+            "additionalProperties": true
           }
-        },
-        "required": [
-          "error",
-          "message"
-        ]
+        ],
+        "example": {
+          "type": "https://docs.sustaina.io/problems/not-found",
+          "title": "Position Not Found",
+          "status": 404,
+          "detail": "The requested position does not exist.",
+          "error": "POSITION_NOT_FOUND"
+        }
       },
       "PositionNode": {
         "type": "object",
@@ -4051,51 +4103,85 @@
         ]
       },
       "UnauthorizedResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "Unauthorized"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
           },
-          "message": {
-            "type": "string",
-            "example": "Unauthorized - Missing or invalid token"
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "Unauthorized"
+              },
+              "message": {
+                "type": "string",
+                "example": "Unauthorized - Missing or invalid token"
+              }
+            },
+            "required": [
+              "error",
+              "message"
+            ],
+            "additionalProperties": true
           }
-        },
-        "required": [
-          "error",
-          "message"
-        ]
+        ],
+        "example": {
+          "type": "https://docs.sustaina.io/problems/unauthorized",
+          "title": "Unauthorized",
+          "status": 401,
+          "detail": "Missing or invalid token.",
+          "error": "UNAUTHORIZED"
+        }
       },
       "ForbiddenResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "Forbidden"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
           },
-          "message": {
-            "type": "string",
-            "example": "Forbidden: insufficient permissions"
-          },
-          "code": {
-            "type": "string",
-            "example": "PERMISSION_DENIED"
-          },
-          "permssion_requirs": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "details": {
-            "type": "object"
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "Forbidden"
+              },
+              "message": {
+                "type": "string",
+                "example": "Forbidden: insufficient permissions"
+              },
+              "code": {
+                "type": "string",
+                "example": "PERMISSION_DENIED"
+              },
+              "permssion_requirs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "details": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "error",
+              "message"
+            ],
+            "additionalProperties": true
           }
-        },
-        "required": [
-          "error",
-          "message"
-        ]
+        ],
+        "example": {
+          "type": "https://docs.sustaina.io/problems/forbidden",
+          "title": "Forbidden",
+          "status": 403,
+          "detail": "You do not have permission to perform this action.",
+          "error": "FORBIDDEN",
+          "code": "PERMISSION_DENIED",
+          "permssion_requirs": [
+            "POSITION_WRITE"
+          ]
+        }
       },
       "GetPositionStylesResponse": {
         "type": "object",
@@ -4469,19 +4555,37 @@
         ]
       },
       "BadRequestResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "VALIDATION_ERROR"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
           },
-          "details": {
-            "type": "object"
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "VALIDATION_ERROR"
+              },
+              "details": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "error"
+            ],
+            "additionalProperties": true
           }
-        },
-        "required": [
-          "error"
-        ]
+        ],
+        "example": {
+          "type": "https://docs.sustaina.io/problems/bad-request",
+          "title": "Bad Request",
+          "status": 400,
+          "detail": "The request could not be processed.",
+          "error": "BAD_REQUEST",
+          "details": {
+            "body": "Malformed JSON"
+          }
+        }
       },
       "DeletePositionResponse": {
         "type": "object",
@@ -4585,50 +4689,127 @@
         ]
       },
       "PositionLinkedToSystemDataResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string",
-            "example": "POSITION_LINKED_TO_SYSTEM_DATA"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
           },
-          "message": {
-            "type": "string",
-            "example": "Cannot delete data because the position is linked to system data (site, product group, questionnaire, report, or workflow)."
-          },
-          "usage": {
-            "$ref": "#/components/schemas/PositionUsageStatus",
-            "description": "Usage status when evaluating deletion constraints."
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "POSITION_LINKED_TO_SYSTEM_DATA"
+              },
+              "message": {
+                "type": "string",
+                "example": "Cannot delete data because the position is linked to system data (site, product group, questionnaire, report, or workflow)."
+              },
+              "usage": {
+                "$ref": "#/components/schemas/PositionUsageStatus",
+                "description": "Usage status when evaluating deletion constraints."
+              }
+            },
+            "required": [
+              "error",
+              "message",
+              "usage"
+            ],
+            "additionalProperties": false
           }
-        },
-        "required": [
-          "error",
-          "message",
-          "usage"
         ],
-        "additionalProperties": false
+        "example": {
+          "type": "https://docs.sustaina.io/problems/position-linked",
+          "title": "Data Linked to System Data",
+          "status": 409,
+          "detail": "Cannot delete data because the position is linked to system data.",
+          "error": "POSITION_LINKED_TO_SYSTEM_DATA",
+          "usage": {
+            "isUse": true,
+            "indicatorFormulaCount": 1,
+            "userAssignmentCount": 0,
+            "siteAssignmentCount": 3,
+            "questionnaireAssignmentCount": 1
+          }
+        }
       },
       "ParentPositionLinkedResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "PARENT_POSITION_LINKED"
+              },
+              "message": {
+                "type": "string",
+                "example": "Cannot delete this position because it still has child positions. Remove or reassign child positions first."
+              },
+              "childCount": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of direct child positions that block deletion."
+              }
+            },
+            "required": [
+              "error",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        ],
+        "example": {
+          "type": "https://docs.sustaina.io/problems/parent-position-linked",
+          "title": "Parent Position Linked",
+          "status": 409,
+          "detail": "Cannot delete this position because it still has child positions.",
+          "error": "PARENT_POSITION_LINKED",
+          "childCount": 2
+        }
+      },
+      "ProblemDetail": {
         "type": "object",
+        "description": "Standard problem detail as defined by RFC 9457. Provides machine-readable errors.",
         "properties": {
-          "error": {
+          "type": {
             "type": "string",
-            "example": "PARENT_POSITION_LINKED"
+            "format": "uri",
+            "description": "A URI reference that identifies the problem type."
           },
-          "message": {
+          "title": {
             "type": "string",
-            "example": "Cannot delete this position because it still has child positions. Remove or reassign child positions first."
+            "description": "A short, human-readable summary of the problem type."
           },
-          "childCount": {
+          "status": {
             "type": "integer",
-            "minimum": 0,
-            "description": "Number of direct child positions that block deletion."
+            "format": "int32",
+            "description": "The HTTP status code generated by the origin server for this occurrence of the problem."
+          },
+          "detail": {
+            "type": "string",
+            "description": "A human-readable explanation specific to this occurrence of the problem."
+          },
+          "instance": {
+            "type": "string",
+            "format": "uri",
+            "description": "A URI reference that identifies the specific occurrence of the problem."
           }
         },
         "required": [
-          "error",
-          "message"
+          "type",
+          "title",
+          "status"
         ],
-        "additionalProperties": false
+        "additionalProperties": true,
+        "example": {
+          "type": "https://docs.sustaina.io/problems/generic-error",
+          "title": "Something went wrong",
+          "status": 500,
+          "detail": "An unexpected error occurred."
+        }
       }
     },
     "responses": {
@@ -4645,7 +4826,7 @@
       "Forbidden": {
         "description": "Forbidden",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/ForbiddenResponse"
             }
@@ -4655,7 +4836,7 @@
       "Unauthorized": {
         "description": "Unauthorized",
         "content": {
-          "application/json": {
+          "application/problem+json": {
             "schema": {
               "$ref": "#/components/schemas/UnauthorizedResponse"
             }
