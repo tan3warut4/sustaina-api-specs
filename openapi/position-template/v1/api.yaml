@@ -768,7 +768,7 @@
       },
       "delete": {
         "summary": "Delete Position by ID",
-        "description": "Delete the specified position. Use `cascade=SUBTREE` to delete the entire subtree.\nUse `dryRun=true` to preview affected count (and IDs if requested) without applying. Associated file attachments are permanently removed as part of this operation. If the position is linked to system data (`usage.isUse=true`) or still has child positions, the API returns a conflict response instead of deleting.",
+        "description": "Delete the specified position. Use `cascade=SUBTREE` to delete the entire subtree.\nUse `dryRun=true` to preview affected count (and IDs if requested) without applying. Associated file attachments are permanently removed as part of this operation. If the position is linked to system data (`isUse=true`) or still has child positions, the API returns a conflict response instead of deleting.",
         "tags": [
           "Position"
         ],
@@ -797,7 +797,7 @@
                 "SELF",
                 "SUBTREE"
               ],
-              "default": "SELF"
+              "default": "SUBTREE"
             }
           },
           {
