@@ -1,166 +1,222 @@
 # Position Template ER Diagram
 
-The following ER diagram mirrors the entities implied by the position template APIs. It focuses on the main tables and their relationships so the API and database layers stay in sync.
+The schema below is extracted from the live `cmd-position-template-service` database and augmented with the planned `isUsed` flag for positions. Relationships focus on the entities exposed by the position template APIs.
 
 ```mermaid
 erDiagram
-    POSITION ||--o{ POSITION_NAME : "has translations"
-    POSITION ||--o{ POSITION_TAG : "is tagged by"
-    POSITION ||--o{ POSITION_FILE : "has attachments"
-    POSITION }o--o{ POSITION_RELATION : "parent/child"
-    POSITION ||--|| STYLE : "styled by"
-    POSITION ||--o{ POSITION_TITLE : "title detail"
-    POSITION ||--o{ POSITION_OUTLINE : "outline detail"
-    POSITION ||--o{ POSITION_SUMMARY : "summary detail"
-    POSITION ||--o{ POSITION_ASSET : "asset detail"
-    POSITION ||--o{ POSITION_FLOW : "flow detail"
-    POSITION ||--o{ POSITION_QUALITATIVE : "qualitative detail"
-    POSITION ||--o{ POSITION_INDICATOR : "indicator detail"
-    POSITION_INDICATOR ||--o{ INDICATOR_FORMULA_TOKEN : "formula tokens"
-    POSITION_QUALITATIVE ||--o{ QUALITATIVE_OPTION : "has options"
-    POSITION_FILE ||--|| STORAGE_FILE : "references"
-    POSITION_TAG }o--|| TAG : "tag metadata"
+    Position ||--o{ PositionName : "has translations"
+    Position ||--o{ PositionTag : "tagged by"
+    Position ||--o{ File : "has attachments"
+    Position ||--|| PositionStyle : "styled by"
+    Position }o--o{ Position : "parent-child"
+    Position ||--|| PositionTitle : "title detail"
+    PositionTitle ||--o{ PositionTitleQuestionText : "question texts"
+    Position ||--|| PositionOutline : "outline detail"
+    Position ||--|| PositionSummary : "summary detail"
+    Position ||--|| PositionAsset : "asset detail"
+    Position ||--|| PositionFlow : "flow detail"
+    Position ||--|| PositionQualitative : "qualitative detail"
+    PositionQualitative ||--o{ PositionQualitativeOptions : "options"
+    PositionQualitativeOptions ||--o{ PositionQualitativeOptionLabels : "labels"
+    PositionQualitative ||--o{ PositionQualitativeTextOfQuestion : "question text"
+    Position ||--|| PositionIndicator : "indicator detail"
+    PositionIndicator ||--o{ IndicatorPositionRef : "position refs"
+    PositionIndicator ||--o{ IndicatorImpactRef : "impact refs"
 
-    POSITION {
-        UUID id
-        UUID tenant_id
+    Position {
+        UUID id PK
+        UUID tenantId
         POSITION_TYPE type
-        BOOLEAN is_active
-        UUID style_id FK
-        UUID parent_id FK
-        INT sorting_level
-        DATE start_term
-        DATE end_term
+        UUID parentId FK
+        INT sortingLevel
+        VARCHAR code
+        TIMESTAMP startTerm
+        TIMESTAMP endTerm
+        BOOLEAN isActive
+        BOOLEAN isUsed "planned flag for usage gating"
         TEXT description
-        TEXT code
-        TEXT display_id
-        BOOLEAN quantity_required
-        UUID created_by
-        TIMESTAMP created_at
-        UUID updated_by
-        TIMESTAMP updated_at
+        TEXT createdBy
+        TIMESTAMP createdAt
+        TEXT updatedBy
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
+        UUID styleId FK
+        TIMESTAMP closeDate
     }
 
-    POSITION_NAME {
-        UUID position_id FK
-        VARCHAR locale
+    PositionName {
+        UUID id PK
+        UUID positionId FK
+        TEXT locale
+        VARCHAR text
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
+    }
+
+    PositionTag {
+        UUID id PK
+        UUID positionId FK
+        TEXT tagId
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
+    }
+
+    PositionStyle {
+        UUID id PK
         TEXT name
-        TEXT tagline
-        TEXT summary
+        TEXT value
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    POSITION_TAG {
-        UUID position_id FK
-        UUID tag_id FK
-    }
-
-    TAG {
+    File {
         UUID id PK
-        UUID tenant_id
-        TEXT code
-        TEXT label
+        UUID tenantId
+        UUID positionId FK
+        TEXT storageKey
+        TEXT fileName
+        TEXT mimeType
+        BIGINT sizeBytes
+        TEXT uploadedBy
+        TIMESTAMP uploadedAt
+        TIMESTAMP deletedAt
     }
 
-    POSITION_FILE {
-        UUID position_id FK
-        UUID file_id FK
-        VARCHAR display_name
-        BOOLEAN soft_deleted
-        TIMESTAMP created_at
+    PositionTitle {
+        UUID positionId PK
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    STORAGE_FILE {
+    PositionTitleQuestionText {
         UUID id PK
-        TEXT path
-        TEXT content_type
-        BIGINT size_bytes
-        UUID uploaded_by
-        TIMESTAMP uploaded_at
+        UUID positionId FK
+        TEXT locale
+        VARCHAR text
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    POSITION_RELATION {
-        UUID parent_id FK
-        UUID child_id FK
-        INT sort_order
+    PositionOutline {
+        UUID positionId PK
+        BOOLEAN useInReport
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    POSITION_TITLE {
-        UUID position_id FK
-        JSONB question_texts
+    PositionSummary {
+        UUID positionId PK
+        TEXT quantityId
+        BOOLEAN useInReport
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    POSITION_OUTLINE {
-        UUID position_id FK
-        BOOLEAN use_in_report
-    }
-
-    POSITION_SUMMARY {
-        UUID position_id FK
-        BOOLEAN use_in_report
-        UUID quantity_id
-    }
-
-    POSITION_ASSET {
-        UUID position_id FK
-        UUID quantity_id
-        NUMERIC allowed_deviation_percent
-        BOOLEAN require_comment
+    PositionAsset {
+        UUID positionId PK
+        TEXT quantityId
+        NUMERIC allowedDeviationPercent
+        BOOLEAN requireComment
         BOOLEAN priority
-        BOOLEAN overview_aggregation
-        BOOLEAN previous_value
-        BOOLEAN use_in_report
+        BOOLEAN overviewAggregation
+        BOOLEAN previousValue
+        BOOLEAN useInReport
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    POSITION_FLOW {
-        UUID position_id FK
-        UUID quantity_id
-        NUMERIC allowed_deviation_percent
-        BOOLEAN require_comment
+    PositionFlow {
+        UUID positionId PK
+        TEXT quantityId
+        NUMERIC allowedDeviationPercent
+        BOOLEAN requireComment
         BOOLEAN priority
-        BOOLEAN overview_aggregation
-        BOOLEAN previous_value
-        BOOLEAN use_in_report
+        BOOLEAN overviewAggregation
+        BOOLEAN previousValue
+        BOOLEAN useInReport
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    POSITION_QUALITATIVE {
-        UUID position_id FK
-        JSONB question_texts
-        VARCHAR choice_of_answer
-        INT min_selected
-        INT max_selected
-        BOOLEAN require_comment
+    PositionQualitative {
+        UUID positionId PK
+        POSITION_QUALITATIVE_CHOICE choiceOfAnswer
+        BOOLEAN textRequiredAnswer
+        INT minSelected
+        INT maxSelected
+        BOOLEAN useInReport
+        BOOLEAN priority
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
-    QUALITATIVE_OPTION {
-        UUID qualitative_id FK
-        UUID option_id
-        INT sort_order
-        JSONB labels
-        BOOLEAN is_active
-    }
-
-    POSITION_INDICATOR {
-        UUID position_id FK
-        UUID quantity_id
-        VARCHAR aggregation_interval
-        VARCHAR calculation
-        UUID unit_id
-    }
-
-    INDICATOR_FORMULA_TOKEN {
-        UUID indicator_id FK
-        INT position
-        VARCHAR token_type
-        TEXT token_value
-    }
-
-    STYLE {
+    PositionQualitativeOptions {
         UUID id PK
-        UUID tenant_id
-        TEXT code
-        TEXT font_family
-        INT font_size
-        VARCHAR font_weight
+        UUID qualitativeId FK
+        INT seq
+        NUMERIC weight
+        BOOLEAN requireCommentOnFillout
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
     }
 
+    PositionQualitativeOptionLabels {
+        UUID id PK
+        UUID optionId FK
+        TEXT locale
+        TEXT text
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
+    }
+
+    PositionQualitativeTextOfQuestion {
+        UUID id PK
+        UUID positionId FK
+        TEXT locale
+        VARCHAR text
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
+    }
+
+    PositionIndicator {
+        UUID positionId PK
+        TEXT quantityId
+        INDICATOR_INTERVAL aggregationInterval
+        INDICATOR_CALCULATION calculation
+        TEXT formulaRaw
+        JSONB formulaTokens
+        BOOLEAN useInReport
+        TIMESTAMP createdAt
+        TIMESTAMP updatedAt
+        TIMESTAMP deletedAt
+    }
+
+    IndicatorPositionRef {
+        UUID positionId FK
+        UUID refPositionId FK
+        TEXT refCode
+        TEXT refLabel
+        TIMESTAMP createdAt
+    }
+
+    IndicatorImpactRef {
+        UUID positionId FK
+        TEXT impactId
+        TEXT impactCode
+        TEXT impactLabel
+        TIMESTAMP createdAt
+    }
 ```
