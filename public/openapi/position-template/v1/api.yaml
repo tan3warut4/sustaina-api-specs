@@ -903,11 +903,7 @@
                       "detail": "Cannot delete data because the position is linked to system data (site, product group, questionnaire, report, or workflow).",
                       "error": "POSITION_LINKED_TO_SYSTEM_DATA",
                       "usage": {
-                        "isUse": true,
-                        "indicatorFormulaCount": 1,
-                        "userAssignmentCount": 0,
-                        "siteAssignmentCount": 3,
-                        "questionnaireAssignmentCount": 1
+                        "isUse": true
                       }
                     }
                   }
@@ -4646,37 +4642,13 @@
         "type": "object",
         "description": "Summarizes whether the position is already assigned for downstream usage, so the UI can enforce edit rules.",
         "properties": {
-          "indicatorFormulaCount": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Number of indicator formulas referencing this position."
-          },
-          "userAssignmentCount": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Number of users directly linked to this position."
-          },
-          "siteAssignmentCount": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Number of sites that use this position."
-          },
-          "questionnaireAssignmentCount": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Number of questionnaires that reference this position."
-          },
           "isUse": {
             "type": "boolean",
             "description": "True when the position is referenced by at least one dependent entity."
           }
         },
         "required": [
-          "isUse",
-          "indicatorFormulaCount",
-          "userAssignmentCount",
-          "siteAssignmentCount",
-          "questionnaireAssignmentCount"
+          "isUse"
         ],
         "additionalProperties": false
       },
@@ -4724,11 +4696,7 @@
           "detail": "Cannot delete data because the position is linked to system data.",
           "error": "POSITION_LINKED_TO_SYSTEM_DATA",
           "usage": {
-            "isUse": true,
-            "indicatorFormulaCount": 1,
-            "userAssignmentCount": 0,
-            "siteAssignmentCount": 3,
-            "questionnaireAssignmentCount": 1
+            "isUse": true
           }
         }
       },
