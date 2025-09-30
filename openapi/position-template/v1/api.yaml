@@ -768,7 +768,7 @@
       },
       "delete": {
         "summary": "Delete Position by ID",
-        "description": "Delete the specified position. Use `cascade=SUBTREE` to delete the entire subtree.\nUse `dryRun=true` to preview affected count (and IDs if requested) without applying. Associated file attachments are permanently removed as part of this operation.",
+        "description": "Delete the specified position. Use `cascade=SUBTREE` to delete the entire subtree.\nUse `dryRun=true` to preview affected count (and IDs if requested) without applying. Associated file attachments are permanently removed as part of this operation. If the position is linked to system data (`usage.isUse=true`) or still has child positions, the API returns a conflict response instead of deleting.",
         "tags": [
           "Position"
         ],
@@ -869,11 +869,18 @@
             }
           },
           "409": {
-            "description": "Conflict (e.g., dependent data prevents deletion)",
+            "description": "Conflict – deletion is blocked because the position is in use or has child positions.",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ConflictResponse"
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/PositionLinkedToSystemDataResponse"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ParentPositionLinkedResponse"
+                    }
+                  ]
                 }
               }
             }
@@ -4511,10 +4518,6 @@
         "type": "object",
         "description": "Summarizes whether the position is already assigned for downstream usage, so the UI can enforce edit rules.",
         "properties": {
-          "assignedToUse": {
-            "type": "boolean",
-            "description": "True when the position is referenced by at least one dependent entity."
-          },
           "indicatorFormulaCount": {
             "type": "integer",
             "minimum": 0,
@@ -4534,10 +4537,14 @@
             "type": "integer",
             "minimum": 0,
             "description": "Number of questionnaires that reference this position."
+          },
+          "isUse": {
+            "type": "boolean",
+            "description": "True when the position is referenced by at least one dependent entity."
           }
         },
         "required": [
-          "assignedToUse",
+          "isUse",
           "indicatorFormulaCount",
           "userAssignmentCount",
           "siteAssignmentCount",
@@ -4552,6 +4559,52 @@
             "$ref": "#/components/schemas/CreatePositionRequest"
           }
         ]
+      },
+      "PositionLinkedToSystemDataResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "POSITION_LINKED_TO_SYSTEM_DATA"
+          },
+          "message": {
+            "type": "string",
+            "example": "Cannot delete data because the position is linked to system data (site, product group, questionnaire, report, or workflow)."
+          },
+          "usage": {
+            "$ref": "#/components/schemas/PositionUsageStatus",
+            "description": "Usage status when evaluating deletion constraints."
+          }
+        },
+        "required": [
+          "error",
+          "message",
+          "usage"
+        ],
+        "additionalProperties": false
+      },
+      "ParentPositionLinkedResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "example": "PARENT_POSITION_LINKED"
+          },
+          "message": {
+            "type": "string",
+            "example": "Cannot delete this position because it still has child positions. Remove or reassign child positions first."
+          },
+          "childCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of direct child positions that block deletion."
+          }
+        },
+        "required": [
+          "error",
+          "message"
+        ],
+        "additionalProperties": false
       }
     },
     "responses": {
