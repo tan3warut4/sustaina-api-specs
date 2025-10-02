@@ -1717,6 +1717,107 @@
         }
       }
     },
+    "/api/v1/position-templates/{positionId}/files/{fileId}": {
+      "delete": {
+        "summary": "Soft delete a file attachment",
+        "description": "Marks the specified file attachment as deleted while retaining a recovery record. Objects flagged for soft deletion follow the storage retention policy before permanent removal.",
+        "tags": [
+          "Files"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "positionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the position template that owns the attachment"
+          },
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the file attachment to soft delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File marked as deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileSoftDeleteControllerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "File or position not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict (e.g., file already deleted or locked)",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConflictResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/files/{fileId}/download": {
       "get": {
         "summary": "Download file by fileId",
@@ -3336,6 +3437,59 @@
           "uploadedAt"
         ],
         "additionalProperties": false
+      },
+      "FileSoftDeleteResult": {
+        "type": "object",
+        "properties": {
+          "positionId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the position template that owns the file"
+          },
+          "fileId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the file attachment"
+          },
+          "softDeleted": {
+            "type": "boolean",
+            "description": "True when the attachment has been marked as deleted"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the attachment was soft deleted"
+          },
+          "deleteRetentionExpiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the file will be purged permanently, if applicable"
+          }
+        },
+        "required": [
+          "positionId",
+          "fileId",
+          "softDeleted",
+          "deletedAt"
+        ],
+        "additionalProperties": false
+      },
+      "FileSoftDeleteControllerResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/FileSoftDeleteResult"
+          },
+          "message": {
+            "type": "string",
+            "example": "File marked as deleted"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "additionalProperties": true
       },
       "ValidationErrorResponse": {
         "allOf": [
