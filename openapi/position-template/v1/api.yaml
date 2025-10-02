@@ -3560,6 +3560,7 @@
           "status": 409,
           "detail": "The position name already exists.",
           "error": "POSITION_NAME_CONFLICT",
+          "message": "Position name already exists.",
           "localeConflict": "en"
         }
       },
