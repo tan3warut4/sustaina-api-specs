@@ -1318,6 +1318,66 @@
         }
       }
     },
+    "/api/v1/position-templates/{positionId}/children/allowed-terms": {
+      "get": {
+        "summary": "Get allowed Start/End Terms for a position with children",
+        "description": "Returns the editable start/end range for the selected position, constrained by its parent and immediate children, along with the date display pattern.",
+        "tags": [
+          "Position-Templates"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "positionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChildTermWindowControllerResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Position not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/position-templates/{positionId}/files/presign": {
       "post": {
         "summary": "Request presigned URLs for file uploads",
@@ -4032,6 +4092,61 @@
           "endTerm"
         ]
       },
+      "ChildTermWindowPosition": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "TITLE",
+              "OUTLINE",
+              "SUMMARY",
+              "ASSET",
+              "FLOW",
+              "INDICATOR",
+              "QUALITATIVE"
+            ]
+          },
+          "displayName": {
+            "type": "string",
+            "example": "Position A"
+          },
+          "startTerm": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "example": "2025-04-01"
+          },
+          "endTerm": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "example": "2026-03-31"
+          },
+          "hasParent": {
+            "type": "boolean",
+            "example": true
+          },
+          "hasChildren": {
+            "type": "boolean",
+            "example": true
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "displayName",
+          "startTerm",
+          "endTerm",
+          "hasParent",
+          "hasChildren"
+        ],
+        "additionalProperties": false
+      },
       "AllowedWindow": {
         "type": "object",
         "properties": {
@@ -4052,6 +4167,44 @@
           "minStart",
           "maxEnd"
         ]
+      },
+      "AllowedTermRange": {
+        "type": "object",
+        "properties": {
+          "min": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "example": "2025-01-01"
+          },
+          "max": {
+            "type": "string",
+            "nullable": true,
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+            "example": "2025-06-01"
+          }
+        },
+        "required": [
+          "min",
+          "max"
+        ],
+        "additionalProperties": false
+      },
+      "ConstraintSources": {
+        "type": "object",
+        "properties": {
+          "parent": {
+            "$ref": "#/components/schemas/AllowedTermRange"
+          },
+          "children": {
+            "$ref": "#/components/schemas/AllowedTermRange"
+          }
+        },
+        "required": [
+          "parent",
+          "children"
+        ],
+        "additionalProperties": false
       },
       "DateDisplayFormat": {
         "type": "object",
@@ -4089,11 +4242,55 @@
         ],
         "additionalProperties": true
       },
+      "ChildTermWindowResponse": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "$ref": "#/components/schemas/ChildTermWindowPosition"
+          },
+          "allowedStart": {
+            "$ref": "#/components/schemas/AllowedTermRange"
+          },
+          "allowedEnd": {
+            "$ref": "#/components/schemas/AllowedTermRange"
+          },
+          "constraintSources": {
+            "$ref": "#/components/schemas/ConstraintSources"
+          },
+          "displayFormat": {
+            "$ref": "#/components/schemas/DateDisplayFormat"
+          }
+        },
+        "required": [
+          "position",
+          "allowedStart",
+          "allowedEnd",
+          "constraintSources",
+          "displayFormat"
+        ],
+        "additionalProperties": false
+      },
       "AllowedTermsControllerResponse": {
         "type": "object",
         "properties": {
           "data": {
             "$ref": "#/components/schemas/AllowedTermsResponse"
+          },
+          "message": {
+            "type": "string",
+            "example": "fetch successfully"
+          }
+        },
+        "required": [
+          "data"
+        ],
+        "additionalProperties": true
+      },
+      "ChildTermWindowControllerResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/ChildTermWindowResponse"
           },
           "message": {
             "type": "string",
