@@ -525,14 +525,39 @@
           },
           "409": {
             "description": "Conflict error (e.g., duplicate code or invalid parent)",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConflictResponse"
+          "content": {
+            "application/problem+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConflictResponse"
+              },
+              "examples": {
+                "nameConflict": {
+                  "summary": "Duplicate position name",
+                  "value": {
+                    "type": "about:blank",
+                    "title": "Conflict",
+                    "status": 409,
+                    "detail": "A position with this name already exists.",
+                    "error": "POSITION_NAME_CONFLICT",
+                    "message": "Position name already exists.",
+                    "localeConflict": "en"
+                  }
+                },
+                "codeConflict": {
+                  "summary": "Duplicate position code",
+                  "value": {
+                    "type": "about:blank",
+                    "title": "Conflict",
+                    "status": 409,
+                    "detail": "A position with this code already exists.",
+                    "error": "POSITION_CODE_CONFLICT",
+                    "message": "Position code already exists."
+                  }
                 }
               }
             }
-          },
+          }
+        },
           "500": {
             "description": "Internal server error"
           }
@@ -1012,14 +1037,39 @@
           },
           "409": {
             "description": "Conflict (e.g., type change forbidden without confirmation or name duplicate)",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConflictResponse"
+          "content": {
+            "application/problem+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConflictResponse"
+              },
+              "examples": {
+                "nameConflict": {
+                  "summary": "Duplicate position name",
+                  "value": {
+                    "type": "about:blank",
+                    "title": "Conflict",
+                    "status": 409,
+                    "detail": "A position with this name already exists.",
+                    "error": "POSITION_NAME_CONFLICT",
+                    "message": "Position name already exists.",
+                    "localeConflict": "en"
+                  }
+                },
+                "typeChangeBlocked": {
+                  "summary": "Type change requires confirmation",
+                  "value": {
+                    "type": "about:blank",
+                    "title": "Conflict",
+                    "status": 409,
+                    "detail": "Cannot change position type because dependent data exists. Retry with forceTypeChange=true after user confirmation.",
+                    "error": "POSITION_TYPE_CHANGE_REQUIRES_CONFIRMATION",
+                    "message": "Confirm the type change before retrying."
+                  }
                 }
               }
             }
-          },
+          }
+        },
           "500": {
             "description": "Internal server error"
           }
@@ -1804,14 +1854,38 @@
           },
           "409": {
             "description": "Conflict (e.g., file already deleted or locked)",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConflictResponse"
+          "content": {
+            "application/problem+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConflictResponse"
+              },
+              "examples": {
+                "alreadyDeleted": {
+                  "summary": "Attachment already deleted",
+                  "value": {
+                    "type": "about:blank",
+                    "title": "Conflict",
+                    "status": 409,
+                    "detail": "The file is already marked as deleted.",
+                    "error": "FILE_ALREADY_DELETED",
+                    "message": "File is already deleted and cannot be removed again."
+                  }
+                },
+                "fileLocked": {
+                  "summary": "Attachment locked",
+                  "value": {
+                    "type": "about:blank",
+                    "title": "Conflict",
+                    "status": 409,
+                    "detail": "The file cannot be deleted because it is referenced by a published report.",
+                    "error": "FILE_LOCKED",
+                    "message": "File is locked by downstream usage."
+                  }
                 }
               }
             }
-          },
+          }
+        },
           "500": {
             "description": "Internal server error"
           }
@@ -3558,9 +3632,9 @@
           "type": "about:blank",
           "title": "Conflict",
           "status": 409,
-          "detail": "The position name already exists.",
-          "error": "POSITION_NAME_CONFLICT",
-          "message": "Position name already exists.",
+          "detail": "The request cannot be completed due to a conflicting resource state.",
+          "error": "CONFLICT",
+          "message": "Resolve the conflicting resource state and retry.",
           "localeConflict": "en"
         }
       },
