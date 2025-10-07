@@ -3864,6 +3864,22 @@
             "type": "boolean",
             "nullable": true
           },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true
+          },
           "isActive": {
             "type": "boolean"
           },
@@ -3891,6 +3907,8 @@
           "startTerm",
           "endTerm",
           "tags",
+          "createdOn",
+          "createdBy",
           "isActive",
           "orderIndex",
           "hasChildren",
@@ -3919,22 +3937,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "createdOn": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedOn": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "createdBy": {
-            "type": "string"
-          },
-          "modifiedBy": {
-            "type": "string",
-            "nullable": true
-          },
           "nodes": {
             "type": "array",
             "items": {
@@ -3947,8 +3949,6 @@
           "rootId",
           "depth",
           "generatedAt",
-          "createdOn",
-          "createdBy",
           "nodes"
         ],
         "additionalProperties": false
