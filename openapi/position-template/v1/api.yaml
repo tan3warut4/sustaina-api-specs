@@ -1076,6 +1076,420 @@
         }
       }
     },
+    "/api/v1/positions/{positionId}/revisions/new": {
+      "post": {
+        "summary": "Create new revision for position",
+        "description": "Duplicate the current revision and open a new one with an updated start term. The previous revision is automatically ended the day before the provided start term.",
+        "tags": [
+          "Position"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "createPositionRevision",
+        "parameters": [
+          {
+            "name": "positionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "Optional tree version ETag used for optimistic locking.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewRevisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Revision created",
+            "headers": {
+              "ETag": {
+                "description": "Latest tree version after the revision is created.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Position not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision timeline conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionConflictResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreconditionFailedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/positions/{positionId}/revisions/end": {
+      "post": {
+        "summary": "End active position revision",
+        "description": "Close the active revision by setting a new end term. Optionally cascades the end term to child positions.",
+        "tags": [
+          "Position"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "endPositionRevision",
+        "parameters": [
+          {
+            "name": "positionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": false,
+            "description": "Optional tree version ETag used for optimistic locking.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EndRevisionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Revision ended",
+            "headers": {
+              "ETag": {
+                "description": "Latest tree version after the revision is ended.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionEnvelope"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Position not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Revision timeline conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionConflictResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreconditionFailedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/positions/actions/cut-paste": {
+      "post": {
+        "summary": "Cut or clone a position subtree",
+        "description": "Move or clone a position (and its children) to a new parent. Supports optional timeline adjustments when required.",
+        "tags": [
+          "Position"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "cutPastePosition",
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "description": "Tree version ETag used for optimistic locking.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Workspace-Id",
+            "in": "header",
+            "required": false,
+            "description": "Optional workspace identifier for multi-tenant routing.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CutPasteRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cut/paste completed",
+            "headers": {
+              "ETag": {
+                "description": "Latest tree version after the cut/paste finishes.",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CutPasteResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Position not found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Timeline or structural conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RevisionConflictResponse"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreconditionFailedResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/api/v1/position-templates/parent-picker/roots": {
       "get": {
         "summary": "List roots for parent picker",
@@ -3366,6 +3780,38 @@
               "type": "string"
             }
           },
+          "timelineState": {
+            "$ref": "#/components/schemas/PositionTimelineState"
+          },
+          "isRevision": {
+            "type": "boolean"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "basePositionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Identifier of the immediately preceding revision, if any."
+          },
+          "nextRevisionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Identifier of the next revision with a later start term, if any."
+          },
+          "latestRevisionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Identifier of the most recent active revision under the same base position."
+          },
           "description": {
             "type": "string",
             "nullable": true
@@ -3638,6 +4084,82 @@
           "localeConflict": "en"
         }
       },
+      "RevisionConflictResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "REVISION_TIMELINE_CONFLICT"
+              },
+              "message": {
+                "type": "string",
+                "description": "Summary of why the revision or move could not be applied."
+              },
+              "conflicts": {
+                "type": "array",
+                "description": "List of conflicting positions or time ranges that prevented the operation.",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "error",
+              "message"
+            ],
+            "additionalProperties": true
+          }
+        ],
+        "example": {
+          "type": "about:blank",
+          "title": "Revision timeline conflict",
+          "status": 409,
+          "detail": "Requested start term overlaps with child position timeline.",
+          "error": "REVISION_TIMELINE_CONFLICT",
+          "message": "Adjust the start term to avoid overlapping child revisions.",
+          "conflicts": [
+            "Child position ABC overlaps 2025-01-01 to 2025-03-31"
+          ]
+        }
+      },
+      "PreconditionFailedResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ProblemDetail"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "example": "PRECONDITION_FAILED"
+              },
+              "message": {
+                "type": "string",
+                "description": "Explanation describing the mismatch between the supplied `If-Match` header and the current tree version."
+              }
+            },
+            "required": [
+              "error",
+              "message"
+            ],
+            "additionalProperties": true
+          }
+        ],
+        "example": {
+          "type": "about:blank",
+          "title": "Precondition Failed",
+          "status": 412,
+          "detail": "ETag mismatch detected for the position tree.",
+          "error": "PRECONDITION_FAILED",
+          "message": "Refresh the position tree and retry with the latest ETag."
+        }
+      },
       "NotFoundResponse": {
         "allOf": [
           {
@@ -3724,6 +4246,20 @@
               "type": "string"
             }
           },
+          "timelineState": {
+            "$ref": "#/components/schemas/PositionTimelineState"
+          },
+          "isRevision": {
+            "type": "boolean"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "basePositionId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "quantityRequired": {
             "type": "number",
             "nullable": true
@@ -3795,6 +4331,10 @@
           "startTerm",
           "endTerm",
           "tags",
+          "timelineState",
+          "isRevision",
+          "revisionNumber",
+          "basePositionId",
           "quantityRequired",
           "isActive",
           "orderIndex",
@@ -3864,6 +4404,20 @@
             "type": "boolean",
             "nullable": true
           },
+          "timelineState": {
+            "$ref": "#/components/schemas/PositionTimelineState"
+          },
+          "isRevision": {
+            "type": "boolean"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "basePositionId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "createdOn": {
             "type": "string",
             "format": "date-time"
@@ -3907,6 +4461,10 @@
           "startTerm",
           "endTerm",
           "tags",
+          "timelineState",
+          "isRevision",
+          "revisionNumber",
+          "basePositionId",
           "createdOn",
           "createdBy",
           "isActive",
@@ -4168,6 +4726,38 @@
               "type": "string"
             }
           },
+          "timelineState": {
+            "$ref": "#/components/schemas/PositionTimelineState"
+          },
+          "isRevision": {
+            "type": "boolean"
+          },
+          "revisionNumber": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "basePositionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "previousRevisionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Identifier of the immediately preceding revision, if any."
+          },
+          "nextRevisionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Identifier of the next revision with a later start term, if any."
+          },
+          "latestRevisionId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Identifier of the most recent active revision under the same base position."
+          },
           "description": {
             "type": "string",
             "nullable": true
@@ -4271,6 +4861,10 @@
           "isActive",
           "style",
           "tags",
+          "timelineState",
+          "isRevision",
+          "revisionNumber",
+          "basePositionId",
           "files",
           "createdBy",
           "createdAt",
@@ -4839,6 +5433,17 @@
         "description": "Comma-separated list of position types to include. Allowed values: TITLE, OUTLINE, SUMMARY, ASSET, FLOW, INDICATOR, QUALITATIVE.",
         "example": "SUMMARY,ASSET"
       },
+      "PositionTimelineState": {
+        "type": "string",
+        "description": "Derived state for coloring the UI timeline badge based on start/end terms relative to today's date.",
+        "enum": [
+          "PAST",
+          "CURRENT",
+          "FUTURE",
+          "UNBOUNDED"
+        ],
+        "example": "CURRENT"
+      },
       "PositionListItem": {
         "allOf": [
           {
@@ -4920,6 +5525,23 @@
                   "type": "object"
                 }
               },
+              "isRevision": {
+                "type": "boolean",
+                "description": "True when this position is a revision rather than the original baseline."
+              },
+              "revisionNumber": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Revision index: 0 for the baseline, 1..N for subsequent revisions."
+              },
+              "basePositionId": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Identifier of the canonical position that anchors all revisions. Equals `id` for the baseline revision."
+              },
+              "timelineState": {
+                "$ref": "#/components/schemas/PositionTimelineState"
+              },
               "createdBy": {
                 "type": "string",
                 "example": "qa"
@@ -4954,6 +5576,10 @@
               "tags",
               "description",
               "files",
+              "isRevision",
+              "revisionNumber",
+              "basePositionId",
+              "timelineState",
               "createdBy",
               "createdAt",
               "updatedBy",
@@ -5092,6 +5718,229 @@
           "data",
           "message"
         ]
+      },
+      "NewRevisionRequest": {
+        "type": "object",
+        "description": "Parameters for creating a new revision of an existing position. The new revision inherits the subtree and metadata while shifting the start term forward.",
+        "properties": {
+          "startTerm": {
+            "type": "string",
+            "format": "date",
+            "description": "Effective start date for the new revision (inclusive). Must follow immediately after the previous revision's end term and respect parent/child constraints.",
+            "example": "2026-01-01"
+          },
+          "endTerm": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "Optional end date for the new revision. Must not precede `startTerm` and must respect parent/child bounds.",
+            "example": "2026-12-31"
+          },
+          "nameOverride": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255,
+            "description": "Custom name to use instead of the default `(revision n)` suffix."
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional user-facing notes describing the reason for the revision."
+          },
+          "cascadeChildren": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, child positions inherit the new start term (adjusted by their relative offsets)."
+          },
+          "copyAttachments": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, file attachments from the previous revision are copied to the new revision."
+          }
+        },
+        "required": [
+          "startTerm"
+        ],
+        "additionalProperties": false
+      },
+      "EndRevisionRequest": {
+        "type": "object",
+        "description": "Parameters for ending the active revision of a position by setting a new end term.",
+        "properties": {
+          "endTerm": {
+            "type": "string",
+            "format": "date",
+            "description": "New end date for the revision (inclusive). Must not precede the revision's start term and must respect parent/child constraints.",
+            "example": "2025-12-31"
+          },
+          "nameOverride": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255,
+            "description": "Optional explicit name to store for the ended revision."
+          },
+          "cascadeChildren": {
+            "type": "boolean",
+            "default": true,
+            "description": "Propagate the end term to child positions when they exceed the requested end term."
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional user notes captured as part of the audit trail."
+          }
+        },
+        "required": [
+          "endTerm"
+        ],
+        "additionalProperties": false
+      },
+      "RevisionEnvelope": {
+        "description": "Response envelope returned by revision APIs. Extends the standard position response with revision metadata.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/GetPositionByIdResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "previousRevisionId": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true,
+                "description": "Identifier of the revision that was active prior to this operation."
+              },
+              "endedRevisionId": {
+                "type": "string",
+                "format": "uuid",
+                "nullable": true,
+                "description": "Identifier of the revision that has just been ended (for end revision flows)."
+              },
+              "revisionNumber": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Revision index associated with the response (0 = original, 1..N = revision sequence)."
+              },
+              "diffSummary": {
+                "type": "array",
+                "description": "Human-readable summary of key differences between the previous and new revision.",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "revisionNumber"
+            ],
+            "additionalProperties": true
+          }
+        ]
+      },
+      "CutPasteRequest": {
+        "type": "object",
+        "description": "Represents a cut/paste action for moving or cloning a position subtree.",
+        "properties": {
+          "sourceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Identifier of the source position to move or clone."
+          },
+          "targetParentId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Identifier of the parent position receiving the subtree. Null moves the node to root level."
+          },
+          "insertAfterId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Sibling position identifier used for ordering. When omitted the node is inserted at the top."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "WITH_DATES",
+              "WITHOUT_DATES"
+            ],
+            "description": "Defines whether the move should adjust timeline fields (`WITH_DATES`) or require existing terms to already fit the target (`WITHOUT_DATES`)."
+          },
+          "timelinePatch": {
+            "type": "object",
+            "nullable": true,
+            "description": "Timeline adjustments applied when `mode` = `WITH_DATES`.",
+            "properties": {
+              "startTerm": {
+                "type": "string",
+                "format": "date",
+                "nullable": true,
+                "description": "Optional start term override applied to the root of the moved subtree."
+              },
+              "endTerm": {
+                "type": "string",
+                "format": "date",
+                "nullable": true,
+                "description": "Optional end term override applied to the root of the moved subtree."
+              },
+              "propagation": {
+                "type": "string",
+                "enum": [
+                  "PRESERVE_RELATIVE",
+                  "HARD_SET"
+                ],
+                "default": "PRESERVE_RELATIVE",
+                "description": "Controls how child timelines adjust when overrides are provided."
+              }
+            },
+            "additionalProperties": false
+          },
+          "copyBehavior": {
+            "type": "string",
+            "enum": [
+              "MOVE",
+              "CLONE"
+            ],
+            "default": "MOVE",
+            "description": "`MOVE` detaches the original node; `CLONE` duplicates it and leaves the source as-is."
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional operator note captured for auditing."
+          }
+        },
+        "required": [
+          "sourceId",
+          "mode"
+        ],
+        "additionalProperties": false
+      },
+      "CutPasteResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/PositionTreeNode"
+          },
+          "treeVersion": {
+            "type": "string",
+            "description": "Latest tree ETag that clients should store for optimistic concurrency."
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "message": {
+            "type": "string",
+            "example": "cut and paste completed"
+          }
+        },
+        "required": [
+          "data",
+          "treeVersion"
+        ],
+        "additionalProperties": true
       },
       "PositionUsageStatus": {
         "type": "object",
