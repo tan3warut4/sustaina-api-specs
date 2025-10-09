@@ -1079,7 +1079,7 @@
     "/api/v1/positions/{positionId}/revisions/new": {
       "post": {
         "summary": "Create new revision for position",
-        "description": "Duplicate the current revision and open a new one with an updated start term. The previous revision is automatically ended the day before the provided start term.",
+        "description": "Duplicate the current revision and open a new one with an updated start term. The previous revision is automatically ended the day before the provided start term. The new start term must stay within the allowed parent/child window; the backend enforces these bounds without requiring a cascade toggle.",
         "tags": [
           "Position"
         ],
@@ -1217,7 +1217,7 @@
     "/api/v1/positions/{positionId}/revisions/end": {
       "post": {
         "summary": "End active position revision",
-        "description": "Close the active revision by setting a new end term. Optionally cascades the end term to child positions.",
+        "description": "Close the active revision by setting a new end term. The requested end term must remain within the allowed parent/child timing window; the backend handles child adjustments automatically.",
         "tags": [
           "Position"
         ],
@@ -5721,7 +5721,7 @@
       },
       "NewRevisionRequest": {
         "type": "object",
-        "description": "Parameters for creating a new revision of an existing position. The new revision inherits the subtree and metadata while shifting only the start term forward.",
+        "description": "Parameters for creating a new revision of an existing position. The new revision inherits the subtree and metadata while shifting only the start term forward within the permitted parent/child window.",
         "properties": {
           "startTerm": {
             "type": "string",
@@ -5734,11 +5734,6 @@
             "nullable": true,
             "maxLength": 255,
             "description": "Custom name to use instead of the default `(revision n)` suffix."
-          },
-          "cascadeChildren": {
-            "type": "boolean",
-            "default": true,
-            "description": "When true, child positions inherit the new start term (adjusted by their relative offsets)."
           },
           "copyAttachments": {
             "type": "boolean",
@@ -5753,7 +5748,7 @@
       },
       "EndRevisionRequest": {
         "type": "object",
-        "description": "Parameters for ending the active revision of a position by setting a new end term.",
+        "description": "Parameters for ending the active revision of a position by setting a new end term within the permitted parent/child window.",
         "properties": {
           "endTerm": {
             "type": "string",
@@ -5766,11 +5761,6 @@
             "nullable": true,
             "maxLength": 255,
             "description": "Optional explicit name to store for the ended revision."
-          },
-          "cascadeChildren": {
-            "type": "boolean",
-            "default": true,
-            "description": "Propagate the end term to child positions when they exceed the requested end term."
           }
         },
         "required": [
