@@ -1103,7 +1103,7 @@
             "name": "If-Match",
             "in": "header",
             "required": false,
-            "description": "Optional tree version ETag used for optimistic locking.",
+            "description": "Optional strong ETag emitted by tree reads. Use the latest value (format: `\"pos-tree:v{treeVersion}\"`, where `treeVersion` increments per mutation) to guard against stale writes.",
             "schema": {
               "type": "string"
             }
@@ -1124,7 +1124,7 @@
             "description": "Revision created",
             "headers": {
               "ETag": {
-                "description": "Latest tree version after the revision is created.",
+                "description": "Strong tree ETag in the format `\"pos-tree:v{treeVersion}\"`. Clients should store and reuse it as `If-Match` on subsequent mutations.",
                 "schema": {
                   "type": "string"
                 }
@@ -1241,7 +1241,7 @@
             "name": "If-Match",
             "in": "header",
             "required": false,
-            "description": "Optional tree version ETag used for optimistic locking.",
+            "description": "Optional strong ETag (format `\"pos-tree:v{treeVersion}\"`) from the latest tree read; supply it to ensure the end-revision action only applies when the caller is up to date.",
             "schema": {
               "type": "string"
             }
@@ -1262,7 +1262,7 @@
             "description": "Revision ended",
             "headers": {
               "ETag": {
-                "description": "Latest tree version after the revision is ended.",
+                "description": "Strong ETag `\"pos-tree:v{treeVersion}\"` representing the tree version after the end-revision completes.",
                 "schema": {
                   "type": "string"
                 }
@@ -1370,7 +1370,7 @@
             "name": "If-Match",
             "in": "header",
             "required": true,
-            "description": "Tree version ETag used for optimistic locking.",
+            "description": "Strong tree ETag (`\"pos-tree:v{treeVersion}\"`) from the most recent read; required to guard the cut/paste mutation against concurrent edits.",
             "schema": {
               "type": "string"
             }
@@ -1400,7 +1400,7 @@
             "description": "Cut/paste completed",
             "headers": {
               "ETag": {
-                "description": "Latest tree version after the cut/paste finishes.",
+                "description": "Refreshed strong ETag in format `\"pos-tree:v{treeVersion}\"` after the move/clone completes.",
                 "schema": {
                   "type": "string"
                 }
@@ -4141,7 +4141,7 @@
               },
               "message": {
                 "type": "string",
-                "description": "Explanation describing the mismatch between the supplied `If-Match` header and the current tree version."
+                "description": "Explanation describing the mismatch between the supplied `If-Match` header (expected format `\"pos-tree:v{treeVersion}\"`) and the current tree version."
               }
             },
             "required": [
@@ -5721,7 +5721,7 @@
       },
       "NewRevisionRequest": {
         "type": "object",
-        "description": "Parameters for creating a new revision of an existing position. The new revision inherits the subtree and metadata while shifting the start term forward.",
+        "description": "Parameters for creating a new revision of an existing position. The new revision inherits the subtree and metadata while shifting only the start term forward.",
         "properties": {
           "startTerm": {
             "type": "string",
@@ -5906,7 +5906,7 @@
           },
           "treeVersion": {
             "type": "string",
-            "description": "Latest tree ETag that clients should store for optimistic concurrency."
+            "description": "Latest strong tree ETag (format `\"pos-tree:v{treeVersion}\"`) that clients should persist for optimistic concurrency."
           },
           "warnings": {
             "type": "array",
