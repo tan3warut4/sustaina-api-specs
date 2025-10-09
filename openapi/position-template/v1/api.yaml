@@ -5729,23 +5729,11 @@
             "description": "Effective start date for the new revision (inclusive). Must follow immediately after the previous revision's end term and respect parent/child constraints.",
             "example": "2026-01-01"
           },
-          "endTerm": {
-            "type": "string",
-            "format": "date",
-            "nullable": true,
-            "description": "Optional end date for the new revision. Must not precede `startTerm` and must respect parent/child bounds.",
-            "example": "2026-12-31"
-          },
           "nameOverride": {
             "type": "string",
             "nullable": true,
             "maxLength": 255,
             "description": "Custom name to use instead of the default `(revision n)` suffix."
-          },
-          "notes": {
-            "type": "string",
-            "nullable": true,
-            "description": "Optional user-facing notes describing the reason for the revision."
           },
           "cascadeChildren": {
             "type": "boolean",
@@ -5783,11 +5771,6 @@
             "type": "boolean",
             "default": true,
             "description": "Propagate the end term to child positions when they exceed the requested end term."
-          },
-          "notes": {
-            "type": "string",
-            "nullable": true,
-            "description": "Optional user notes captured as part of the audit trail."
           }
         },
         "required": [
