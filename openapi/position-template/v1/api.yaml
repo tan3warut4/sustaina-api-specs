@@ -1355,7 +1355,7 @@
     "/api/v1/positions/actions/cut-paste": {
       "post": {
         "summary": "Cut or clone a position subtree",
-        "description": "Move or clone a position (and its children) to a new parent. Supports optional timeline adjustments when required.",
+        "description": "Moves or clones a position node together with its entire subtree. The caller provides the source node, the destination parent (or null for root), and whether the action is a destructive cut (`MOVE`) or a non-destructive clone (`CLONE`). When timeline adjustments are needed, set `mode` to `WITH_DATES` and supply `timelinePatch` so the backend cascades new start/end terms across descendants. `WITHOUT_DATES` enforces that the existing timeline already fits under the new parent. The ETag header keeps the tree mutation safe from concurrent edits.",
         "tags": [
           "Position"
         ],
@@ -5876,11 +5876,6 @@
             ],
             "default": "MOVE",
             "description": "`MOVE` detaches the original node; `CLONE` duplicates it and leaves the source as-is."
-          },
-          "notes": {
-            "type": "string",
-            "nullable": true,
-            "description": "Optional operator note captured for auditing."
           }
         },
         "required": [
