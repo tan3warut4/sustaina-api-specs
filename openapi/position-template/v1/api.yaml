@@ -3788,29 +3788,31 @@
           },
           "revisionNumber": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Monotonically increasing revision index (0 for the original record)."
           },
           "basePositionId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Stable UUID shared by every revision of this logical position."
           },
           "previousRevisionId": {
             "type": "string",
             "format": "uuid",
             "nullable": true,
-            "description": "Identifier of the immediately preceding revision, if any."
+            "description": "UUID of the revision that was active immediately before this one; null when this is the first revision."
           },
           "nextRevisionId": {
             "type": "string",
             "format": "uuid",
             "nullable": true,
-            "description": "Identifier of the next revision with a later start term, if any."
+            "description": "UUID of the revision scheduled after this one, allowing forward traversal; null if this is the latest revision."
           },
           "latestRevisionId": {
             "type": "string",
             "format": "uuid",
             "nullable": true,
-            "description": "Identifier of the most recent active revision under the same base position."
+            "description": "UUID of the revision currently considered active for the same base position."
           },
           "description": {
             "type": "string",
@@ -4254,11 +4256,13 @@
           },
           "revisionNumber": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Monotonically increasing revision index (0 for the original record)."
           },
           "basePositionId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Stable UUID shared by every revision of this logical position."
           },
           "quantityRequired": {
             "type": "number",
@@ -4412,11 +4416,13 @@
           },
           "revisionNumber": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Monotonically increasing revision index (0 for the original record)."
           },
           "basePositionId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Stable UUID shared by every revision of this logical position."
           },
           "createdOn": {
             "type": "string",
@@ -4734,29 +4740,31 @@
           },
           "revisionNumber": {
             "type": "integer",
-            "minimum": 0
+            "minimum": 0,
+            "description": "Monotonically increasing revision index (0 for the original record)."
           },
           "basePositionId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Stable UUID shared by every revision of this logical position."
           },
           "previousRevisionId": {
             "type": "string",
             "format": "uuid",
             "nullable": true,
-            "description": "Identifier of the immediately preceding revision, if any."
+            "description": "UUID of the revision that was active immediately before this one; null when this is the first revision."
           },
           "nextRevisionId": {
             "type": "string",
             "format": "uuid",
             "nullable": true,
-            "description": "Identifier of the next revision with a later start term, if any."
+            "description": "UUID of the revision scheduled after this one, allowing forward traversal; null if this is the latest revision."
           },
           "latestRevisionId": {
             "type": "string",
             "format": "uuid",
             "nullable": true,
-            "description": "Identifier of the most recent active revision under the same base position."
+            "description": "UUID of the revision currently considered active for the same base position."
           },
           "description": {
             "type": "string",
@@ -5781,25 +5789,18 @@
                 "type": "string",
                 "format": "uuid",
                 "nullable": true,
-                "description": "Identifier of the revision that was active prior to this operation."
+                "description": "UUID of the revision that was active just before this operation ran. Enables callers to traverse the historical chain in reverse order."
               },
               "endedRevisionId": {
                 "type": "string",
                 "format": "uuid",
                 "nullable": true,
-                "description": "Identifier of the revision that has just been ended (for end revision flows)."
+                "description": "For end-revision calls, contains the UUID of the revision that has just been closed; otherwise null so consumers know no closure occurred."
               },
               "revisionNumber": {
                 "type": "integer",
                 "minimum": 0,
-                "description": "Revision index associated with the response (0 = original, 1..N = revision sequence)."
-              },
-              "diffSummary": {
-                "type": "array",
-                "description": "Human-readable summary of key differences between the previous and new revision.",
-                "items": {
-                  "type": "string"
-                }
+                "description": "Monotonically increasing index on the base position (0 for the original record, increasing by 1 for each new revision)."
               }
             },
             "required": [
